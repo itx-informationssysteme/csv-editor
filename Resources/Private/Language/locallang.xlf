@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" product-name="csv_editor">
+        <header/>
+        <body>
+            <trans-unit id="title.editor"><source>CSV Editor</source></trans-unit>
+            <trans-unit id="button.save"><source>Save</source></trans-unit>
+            <trans-unit id="button.back"><source>Back to file list</source></trans-unit>
+            <trans-unit id="button.addRow"><source>Add row</source></trans-unit>
+            <trans-unit id="button.addColumn"><source>Add column</source></trans-unit>
+            <trans-unit id="button.removeRow"><source>Remove row</source></trans-unit>
+            <trans-unit id="label.file"><source>File</source></trans-unit>
+            <trans-unit id="label.headerRow"><source>Header row</source></trans-unit>
+            <trans-unit id="label.column"><source>Column</source></trans-unit>
+            <trans-unit id="label.action"><source>Action</source></trans-unit>
+            <trans-unit id="label.keepBom"><source>Keep UTF-8 BOM</source></trans-unit>
+            <trans-unit id="message.minOneRow"><source>Please save at least one non-empty row.</source></trans-unit>
+            <trans-unit id="message.saved"><source>CSV file has been saved.</source></trans-unit>
+            <trans-unit id="tooltip.editAsTable"><source>Edit CSV as table</source></trans-unit>
+        </body>
+    </file>
+</xliff>
+

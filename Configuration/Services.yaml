@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Itx\CsvEditor\:
+        resource: '../Classes/*'
+
+    Itx\CsvEditor\Controller\EditCsvController:
+        public: true
+
+    Itx\CsvEditor\EventListener\FileListCsvActionListener:
+        tags:
+            - name: event.listener
+              identifier: 'itx/csv-editor/filelist-action'
+              event: TYPO3\CMS\Filelist\Event\ProcessFileListActionsEvent
+

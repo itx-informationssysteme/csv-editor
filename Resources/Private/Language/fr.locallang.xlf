@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" target-language="fr" datatype="plaintext" original="messages" product-name="csv_editor">
+        <header/>
+        <body>
+            <trans-unit id="title.editor"><target>Editeur CSV</target></trans-unit>
+            <trans-unit id="button.save"><target>Enregistrer</target></trans-unit>
+            <trans-unit id="button.back"><target>Retour a la liste des fichiers</target></trans-unit>
+            <trans-unit id="button.addRow"><target>Ajouter une ligne</target></trans-unit>
+            <trans-unit id="button.addColumn"><target>Ajouter une colonne</target></trans-unit>
+            <trans-unit id="button.removeRow"><target>Supprimer la ligne</target></trans-unit>
+            <trans-unit id="label.file"><target>Fichier</target></trans-unit>
+            <trans-unit id="label.headerRow"><target>Ligne d'en-tete</target></trans-unit>
+            <trans-unit id="label.column"><target>Colonne</target></trans-unit>
+            <trans-unit id="label.action"><target>Action</target></trans-unit>
+            <trans-unit id="label.keepBom"><target>Conserver le BOM UTF-8</target></trans-unit>
+            <trans-unit id="message.minOneRow"><target>Veuillez enregistrer au moins une ligne avec du contenu.</target></trans-unit>
+            <trans-unit id="message.saved"><target>Le fichier CSV a ete enregistre.</target></trans-unit>
+            <trans-unit id="tooltip.editAsTable"><target>Modifier le CSV comme tableau</target></trans-unit>
+        </body>
+    </file>
+</xliff>
+

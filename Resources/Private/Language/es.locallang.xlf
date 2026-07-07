@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" target-language="es" datatype="plaintext" original="messages" product-name="csv_editor">
+        <header/>
+        <body>
+            <trans-unit id="title.editor"><target>Editor CSV</target></trans-unit>
+            <trans-unit id="button.save"><target>Guardar</target></trans-unit>
+            <trans-unit id="button.back"><target>Volver a la lista de archivos</target></trans-unit>
+            <trans-unit id="button.addRow"><target>Anadir fila</target></trans-unit>
+            <trans-unit id="button.addColumn"><target>Anadir columna</target></trans-unit>
+            <trans-unit id="button.removeRow"><target>Eliminar fila</target></trans-unit>
+            <trans-unit id="label.file"><target>Archivo</target></trans-unit>
+            <trans-unit id="label.headerRow"><target>Fila de encabezado</target></trans-unit>
+            <trans-unit id="label.column"><target>Columna</target></trans-unit>
+            <trans-unit id="label.action"><target>Accion</target></trans-unit>
+            <trans-unit id="label.keepBom"><target>Mantener BOM UTF-8</target></trans-unit>
+            <trans-unit id="message.minOneRow"><target>Guarda al menos una fila con contenido.</target></trans-unit>
+            <trans-unit id="message.saved"><target>El archivo CSV se ha guardado.</target></trans-unit>
+            <trans-unit id="tooltip.editAsTable"><target>Editar CSV como tabla</target></trans-unit>
+        </body>
+    </file>
+</xliff>
+

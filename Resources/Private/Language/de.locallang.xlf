@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" target-language="de" datatype="plaintext" original="messages" product-name="csv_editor">
+        <header/>
+        <body>
+            <trans-unit id="title.editor"><target>CSV-Editor</target></trans-unit>
+            <trans-unit id="button.save"><target>Speichern</target></trans-unit>
+            <trans-unit id="button.back"><target>Zurueck zur Dateiliste</target></trans-unit>
+            <trans-unit id="button.addRow"><target>Zeile hinzufuegen</target></trans-unit>
+            <trans-unit id="button.addColumn"><target>Spalte hinzufuegen</target></trans-unit>
+            <trans-unit id="button.removeRow"><target>Zeile entfernen</target></trans-unit>
+            <trans-unit id="label.file"><target>Datei</target></trans-unit>
+            <trans-unit id="label.headerRow"><target>Kopfzeile</target></trans-unit>
+            <trans-unit id="label.column"><target>Spalte</target></trans-unit>
+            <trans-unit id="label.action"><target>Aktion</target></trans-unit>
+            <trans-unit id="label.keepBom"><target>UTF-8 BOM beibehalten</target></trans-unit>
+            <trans-unit id="message.minOneRow"><target>Bitte mindestens eine Zeile mit Inhalt speichern.</target></trans-unit>
+            <trans-unit id="message.saved"><target>CSV-Datei wurde gespeichert.</target></trans-unit>
+            <trans-unit id="tooltip.editAsTable"><target>CSV als Tabelle bearbeiten</target></trans-unit>
+        </body>
+    </file>
+</xliff>
+

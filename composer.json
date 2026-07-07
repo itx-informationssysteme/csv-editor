@@ -1,0 +1,35 @@
+{
+	"name": "itx/csv-editor",
+	"version": "11.5.50",
+	"description": "TYPO3 backend CSV editor for filelist integration",
+	"type": "typo3-cms-extension",
+	"license": "GPL-3.0-or-later",
+	"homepage": "http://www.itx.de",
+	"authors": [
+		{
+			"name": "Andreas Hurst",
+			"email": "andreas.hurst@itx.de",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"email": "typo-itx@itx.de",
+		"issues": "https://github.com/typo3-itx/jobapplications/issues",
+		"docs": "https://docs.typo3.org/p/itx/jobapplications/main/en-us/"
+	},
+	"require": {
+		"typo3/cms-core": "^11.5",
+		"typo3/cms-backend": "^11.5",
+		"typo3/cms-filelist": "^11.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Itx\\CsvEditor\\": "Classes/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "csv_editor"
+		}
+	}
+}
