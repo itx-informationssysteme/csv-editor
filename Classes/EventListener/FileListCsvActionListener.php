@@ -6,9 +6,9 @@ namespace Itx\CsvEditor\EventListener;
 
 use Itx\CsvEditor\Service\CsvEditorTargetResolver;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Filelist\Event\ProcessFileListActionsEvent;
 
@@ -68,4 +68,3 @@ class FileListCsvActionListener
         return $GLOBALS['LANG'];
     }
 }
-

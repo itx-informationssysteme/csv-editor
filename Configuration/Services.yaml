@@ -15,4 +15,3 @@ services:
             - name: event.listener
               identifier: 'itx/csv-editor/filelist-action'
               event: TYPO3\CMS\Filelist\Event\ProcessFileListActionsEvent
-

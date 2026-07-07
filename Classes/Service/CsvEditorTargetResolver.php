@@ -25,4 +25,3 @@ class CsvEditorTargetResolver
         return self::ALLOWED_IDENTIFIER_SUFFIX;
     }
 }
-

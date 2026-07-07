@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Itx\CsvEditor\Controller;
 
 use Itx\CsvEditor\Service\CsvEditorTargetResolver;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
@@ -16,6 +15,7 @@ use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -297,7 +297,6 @@ class EditCsvController
         }
 
         $columnCount = max(1, ...array_map('count', $rows));
-        $headerRowLabel = $this->trans('label.headerRow');
         $columnLabel = $this->trans('label.column');
         $actionLabel = $this->trans('label.action');
         $fileLabel = $this->trans('label.file');
@@ -307,23 +306,21 @@ class EditCsvController
         $keepBomLabel = $this->trans('label.keepBom');
 
         $rowsHtml = '';
+        $headerInputsHtml = '';
         $headerValues = $rows[0] ?? [];
-        foreach ($rows as $rowIndex => $row) {
+        for ($column = 0; $column < $columnCount; $column++) {
+            $headerValue = (string)($headerValues[$column] ?? '');
+            $headerInputsHtml .= '<input class="csv-editor__input csv-editor__header-value" type="hidden" name="cells[0][' . $column . ']" value="' . $this->escape($headerValue) . '">';
+        }
+        for ($rowIndex = 1; $rowIndex < count($rows); $rowIndex++) {
+            $row = $rows[$rowIndex] ?? [];
             $rowsHtml .= '<tr>';
-            $rowsHtml .= '<th scope="row" class="csv-editor__row-label">' . ($rowIndex === 0 ? $this->escape($headerRowLabel) : (string)$rowIndex) . '</th>';
+            $rowsHtml .= '<th scope="row" class="csv-editor__row-label">' . (string)$rowIndex . '</th>';
             for ($column = 0; $column < $columnCount; $column++) {
                 $value = $this->escape($row[$column] ?? '');
-                if ($rowIndex === 0) {
-                    $rowsHtml .= '<td><span class="form-control-plaintext">' . $value . '</span><input class="csv-editor__input csv-editor__header-value" type="hidden" name="cells[' . $rowIndex . '][' . $column . ']" value="' . $value . '"></td>';
-                } else {
-                    $rowsHtml .= '<td><input class="form-control csv-editor__input" type="text" name="cells[' . $rowIndex . '][' . $column . ']" value="' . $value . '" style="min-width: 320px;"></td>';
-                }
+                $rowsHtml .= '<td><input class="form-control csv-editor__input" type="text" name="cells[' . $rowIndex . '][' . $column . ']" value="' . $value . '" style="min-width: 320px;"></td>';
             }
-            if ($rowIndex === 0) {
-                $rowsHtml .= '<td></td>';
-            } else {
-                $rowsHtml .= '<td><button class="btn btn-default csv-editor__remove-row" type="button">' . $this->escape($removeRowLabel) . '</button></td>';
-            }
+            $rowsHtml .= '<td><button class="btn btn-default csv-editor__remove-row" type="button">' . $this->escape($removeRowLabel) . '</button></td>';
             $rowsHtml .= '</tr>';
         }
 
@@ -346,6 +343,7 @@ class EditCsvController
             . $flash
             . '<p><strong>' . $this->escape($fileLabel) . ':</strong> <code>' . $this->escape($combinedIdentifier) . '</code></p>'
             . '<form id="csv-editor-form" method="post" action="' . $this->escape($formAction) . '">'
+            . $headerInputsHtml
             . '<input type="hidden" name="target" value="' . $this->escape($combinedIdentifier) . '">'
             . '<input type="hidden" name="returnUrl" value="' . $this->escape($returnUrl) . '">'
             . '<input type="hidden" id="csv-editor-column-count" name="columnCount" value="' . $columnCount . '">'
@@ -361,13 +359,12 @@ class EditCsvController
             . '<tbody>' . $rowsHtml . '</tbody>'
             . '</table></div>'
             . '</form>'
-            . $this->renderScript($headerRowLabel, $removeRowLabel, $columnLabel)
+            . $this->renderScript($removeRowLabel, $columnLabel)
             . '</div>';
     }
 
-    private function renderScript(string $headerRowLabel, string $removeRowLabel, string $columnLabel): string
+    private function renderScript(string $removeRowLabel, string $columnLabel): string
     {
-        $headerRowJs = $this->jsString($headerRowLabel);
         $removeRowJs = $this->jsString($removeRowLabel);
         $columnJs = $this->jsString($columnLabel);
 
@@ -378,21 +375,20 @@ class EditCsvController
             . 'const colInput=document.getElementById("csv-editor-column-count");'
             . 'const addRowBtn=document.getElementById("csv-editor-add-row");'
             . 'const addColBtn=document.getElementById("csv-editor-add-column");'
-            . 'const headerRowLabel=' . $headerRowJs . ';'
             . 'const removeRowLabel=' . $removeRowJs . ';'
             . 'const columnLabel=' . $columnJs . ';'
-            . 'const getHeaderRow=function(){return tbody.querySelector("tr");};'
-            . 'const updateColumnHeadings=function(){const headerRow=getHeaderRow();if(!headerRow){return;}const headers=table.querySelectorAll("thead th");const headerValues=headerRow.querySelectorAll("input.csv-editor__header-value");headerValues.forEach((input,index)=>{const th=headers[index+1];if(!th){return;}const value=(input.value||"").trim();th.textContent=value!==""?value:(columnLabel+" "+(index+1));});};'
-            . 'const updateLabels=function(){tbody.querySelectorAll("tr").forEach((row,index)=>{const label=row.querySelector(".csv-editor__row-label");if(label){label.textContent=index===0?headerRowLabel:String(index);}});};'
-            . 'const reindex=function(){tbody.querySelectorAll("tr").forEach((row,r)=>{row.querySelectorAll("input.csv-editor__input").forEach((input,c)=>{input.name=`cells[${r}][${c}]`;});});};'
+            . 'const updateColumnHeadings=function(){var headers=table.querySelectorAll("thead th");var headerValues=document.querySelectorAll("input.csv-editor__header-value");headerValues.forEach(function(input,index){var th=headers[index+1];if(!th){return;}var value=(input.value||"").trim();th.textContent=value!==""?value:(columnLabel+" "+(index+1));});};'
+            . 'const updateLabels=function(){tbody.querySelectorAll("tr").forEach((row,index)=>{const label=row.querySelector(".csv-editor__row-label");if(label){label.textContent=String(index+1);}});};'
+            . 'const reindex=function(){tbody.querySelectorAll("tr").forEach((row,r)=>{row.querySelectorAll("input.csv-editor__input").forEach((input,c)=>{input.name=`cells[${r+1}][${c}]`;});});};'
             . 'const wireRemove=function(scope){scope.querySelectorAll(".csv-editor__remove-row").forEach((btn)=>{btn.onclick=function(){if(tbody.querySelectorAll("tr").length<=1){return;}btn.closest("tr").remove();reindex();updateLabels();};});};'
-            . 'addRowBtn.onclick=function(){const rowIndex=tbody.querySelectorAll("tr").length;const colCount=parseInt(colInput.value,10);const tr=document.createElement("tr");'
+            . 'addRowBtn.onclick=function(){const rowIndex=tbody.querySelectorAll("tr").length+1;const colCount=parseInt(colInput.value,10);const tr=document.createElement("tr");'
             . 'const head=document.createElement("th");head.scope="row";head.className="csv-editor__row-label";head.textContent=String(rowIndex);tr.appendChild(head);'
             . 'for(let c=0;c<colCount;c++){const td=document.createElement("td");const input=document.createElement("input");input.type="text";input.className="form-control csv-editor__input";input.name=`cells[${rowIndex}][${c}]`;td.appendChild(input);tr.appendChild(td);}'
             . 'const action=document.createElement("td");const remove=document.createElement("button");remove.type="button";remove.className="btn btn-default csv-editor__remove-row";remove.textContent=removeRowLabel;action.appendChild(remove);tr.appendChild(action);tbody.appendChild(tr);wireRemove(tr);reindex();updateLabels();};'
             . 'addColBtn.onclick=function(){const current=parseInt(colInput.value,10);colInput.value=String(current+1);'
             . 'const headRow=table.querySelector("thead tr");const actionHead=headRow.lastElementChild;const th=document.createElement("th");th.scope="col";th.textContent=columnLabel+" "+(current+1);headRow.insertBefore(th,actionHead);'
-            . 'tbody.querySelectorAll("tr").forEach((row,rowIndex)=>{const action=row.lastElementChild;const td=document.createElement("td");if(rowIndex===0){const label=document.createElement("span");label.className="form-control-plaintext";const input=document.createElement("input");input.type="hidden";input.className="csv-editor__input csv-editor__header-value";input.name=`cells[${rowIndex}][${current}]`;input.value="";td.appendChild(label);td.appendChild(input);}else{const input=document.createElement("input");input.type="text";input.className="form-control csv-editor__input";input.name=`cells[${rowIndex}][${current}]`;td.appendChild(input);}row.insertBefore(td,action);});reindex();updateColumnHeadings();};'
+            . 'const headerInput=document.createElement("input");headerInput.type="hidden";headerInput.className="csv-editor__input csv-editor__header-value";headerInput.name=`cells[0][${current}]`;headerInput.value="";form.insertBefore(headerInput,form.firstChild);'
+            . 'tbody.querySelectorAll("tr").forEach((row,rowIndex)=>{const action=row.lastElementChild;const td=document.createElement("td");const input=document.createElement("input");input.type="text";input.className="form-control csv-editor__input";input.name=`cells[${rowIndex+1}][${current}]`;td.appendChild(input);row.insertBefore(td,action);});reindex();updateColumnHeadings();};'
             . 'form.addEventListener("submit",function(){reindex();});'
             . 'wireRemove(document);updateLabels();updateColumnHeadings();})();</script>';
     }
@@ -417,5 +413,3 @@ class EditCsvController
         return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 }
-
-

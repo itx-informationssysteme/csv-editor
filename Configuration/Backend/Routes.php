@@ -10,4 +10,3 @@ return [
         'target' => EditCsvController::class . '::handleRequest',
     ],
 ];
-
