@@ -1,24 +1,18 @@
 {
 	"name": "itx/csv-editor",
-
 	"description": "TYPO3 backend CSV editor for filelist integration",
 	"type": "typo3-cms-extension",
 	"license": "GPL-3.0-or-later",
 	"homepage": "http://www.itx.de",
 	"authors": [
 		{
-			"name": "Andreas Hurst",
-			"email": "andreas.hurst@itx.de",
-			"role": "Developer"
-		},
-		{
-			"name": "Patrik Marosváry",
-			"email": "patrik.marosvary@itx.de",
+			"name": "itx informationssysteme gmbh",
+			"email": "support@itx.de",
 			"role": "Developer"
 		}
 	],
 	"support": {
-		"email": "typo-itx@itx.de",
+		"email": "support@itx.de",
 		"issues": "https://github.com/typo3-itx/jobapplications/issues",
 		"docs": "https://docs.typo3.org/p/itx/jobapplications/main/en-us/"
 	},
