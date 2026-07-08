@@ -1,26 +1,87 @@
-# csv-editor
+# CSV Editor for TYPO3
 
-Eigenständige TYPO3-Extension fuer die direkte Bearbeitung von CSV-Dateien
-innerhalb der Filelist.
+This extension provides a backend CSV editor integrated into the Filelist module. It allows editors to open CSV files from the Filelist in a spreadsheet-like editor (semicolon separated) and save the results back to CSV (optional with UTF-8 BOM).
 
-## Verhalten
+Status
+------
+- Initial semantic version: **1.0.0**
+- Tested with: **TYPO3 11.5.50**
 
-- ersetzt in der Filelist fuer die Ziel-Datei den normalen Edit-Button
-- öffnet einen tabellarischen CSV-Editor (Semikolon-getrennt)
-- speichert wieder als CSV (optional mit UTF-8 BOM)
+Features
+--------
+- Replaces the default edit action in the Filelist for target CSV files with a CSV editor.
+- Spreadsheet-like editing interface for semicolon-separated CSV files.
+- Save back to CSV with optional UTF-8 BOM.
 
-## Installation
+Requirements
+------------
+- PHP and TYPO3 versions supported: TYPO3 11.5.x (tested on 11.5.50)
+- Composer for installation
+- The user needs write permissions for the target storage/folder to save CSV files.
 
-1. Composer-Abhängigkeit in der Projektwurzel:
+Installation
+------------
+Install via Composer in your TYPO3 project root:
 
 ```bash
 composer require itx/csv-editor:^1.0
 ```
 
-2. TYPO3 Cache leeren.
+After installation, clear the TYPO3 caches and check the extension list in the backend.
 
-## Hinweise
+Usage
+-----
+1. Open the Filelist in the TYPO3 backend.
+2. For CSV files the regular edit button is replaced by the CSV Editor action.
+3. Edit the file in the grid and save. The file will be written back as CSV (semicolon separated).
 
-- Zugriff wird auf CSV-Dateien beschränkt.
-- Der Benutzer benötigt Schreibrechte im entsprechenden Storage/Ordner.
+Configuration
+-------------
+- By default the editor works on files with a `.csv` extension.
 
+Composer constraints
+--------------------
+The package requires TYPO3 packages at least from 11.5.50 and below 12.0:
+
+```text
+"require": {
+  "typo3/cms-core": ">=11.5.50 <12.0",
+  "typo3/cms-backend": ">=11.5.50 <12.0",
+  "typo3/cms-filelist": ">=11.5.50 <12.0"
+}
+```
+
+Development / Contributing
+--------------------------
+Contributions are welcome. Please open an issue or a pull request on the repository. When contributing:
+
+- Follow PSR-12 coding style where possible.
+- Add tests for new functionality if applicable.
+- Update `CHANGELOG` and `ext_emconf.php` version when creating releases.
+
+Releasing
+---------
+- We use semantic versioning starting at `1.0.0`.
+- Create a git tag for a release and push it to the remote repository (e.g. `git tag -a v1.0.0 -m "Release v1.0.0"` and `git push origin v1.0.0`).
+- Packagist will pick up the tag and publish the new version (or configure the GitHub integration in Packagist for automatic updates).
+
+Support
+-------
+If you encounter problems or bugs, please open an issue on the repository. For commercial support contact the authors (see below).
+
+Authors
+-------
+- Andreas Hurst <andreas.hurst@itx.de> (ITX)
+
+License
+-------
+This extension is licensed under the GPL-3.0-or-later. See `LICENCE.txt` for details.
+
+Changelog
+---------
+See the `Changelog/` directory for release notes and history.
+
+Notes
+-----
+- The extension installs as a Composer package and will be placed in `vendor/` by Composer. If you require installation into `typo3conf/ext/`, configure installer paths accordingly.
+- Double-check `support` URLs and repository metadata in `composer.json` before publishing to Packagist.
