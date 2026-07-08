@@ -166,13 +166,14 @@ class EditCsvController
         }
 
         $hasBom = str_starts_with($contents, "\xEF\xBB\xBF");
+        $delimiter = $this->detectDelimiter($localPath);
         $handle = fopen($localPath, 'rb');
         if ($handle === false) {
             throw new RuntimeException('CSV-Datei konnte nicht geoeffnet werden.');
         }
 
         $rows = [];
-        while (($row = fgetcsv($handle, 0, ';')) !== false) {
+        while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
             $normalizedRow = [];
             foreach ($row as $index => $cell) {
                 $value = (string)($cell ?? '');
@@ -194,6 +195,29 @@ class EditCsvController
             'hasBom' => $hasBom,
         ];
     }
+
+    // Source - https://stackoverflow.com/a/59581170
+    // Posted by Ahmed Bermawy
+    // Retrieved 2026-07-08, License - CC BY-SA 4.0
+
+    /**
+     * @param string $csvFile Path to the CSV file
+     * @return string Delimiter
+     */
+    public function detectDelimiter(string $csvFile): string
+    {
+        $delimiters = [";" => 0, "," => 0, "\t" => 0, "|" => 0];
+
+        $handle = fopen($csvFile, "r");
+        $firstLine = fgets($handle);
+        fclose($handle);
+        foreach ($delimiters as $delimiter => &$count) {
+            $count = count(str_getcsv($firstLine, $delimiter));
+        }
+
+        return array_search(max($delimiters), $delimiters);
+    }
+
 
     /**
      * @param array<int, array<int, string>> $rows

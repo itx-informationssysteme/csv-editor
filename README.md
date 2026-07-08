@@ -26,7 +26,7 @@ After installation, clear the TYPO3 caches and check the extension list in the b
 Usage
 -----
 1. Open the Filelist in the TYPO3 backend.
-2. For CSV files the regular edit button is replaced by the CSV Editor action.
+2. For CSV files, in the more options menu, a new option "Edit CSV as table" is available
 3. Edit the file in the grid and save. The file will be written back as CSV (semicolon separated).
 
 Configuration
