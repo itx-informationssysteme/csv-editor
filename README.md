@@ -1,6 +1,6 @@
 # csv-editor
 
-Eigenständige TYPO3-Extension fuer die direkte Bearbeitung von CSV-Dateien
+Eigenständige TYPO3-Extension für die direkte Bearbeitung von CSV-Dateien
 innerhalb der Filelist.
 
 ## Verhalten
