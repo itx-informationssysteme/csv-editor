@@ -24,7 +24,7 @@ Installation
 Install via Composer in your TYPO3 project root:
 
 ```bash
-composer require itx/csv-editor:^1.0
+composer require itx/csv-editor
 ```
 
 After installation, clear the TYPO3 caches and check the extension list in the backend.
