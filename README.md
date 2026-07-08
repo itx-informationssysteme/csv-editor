@@ -37,19 +37,11 @@ Usage
 
 Configuration
 -------------
-- By default the editor works on files with a `.csv` extension.
+- By default the editor works on all files with a `.csv` extension.
 
 Composer constraints
 --------------------
 The package requires TYPO3 packages at least from 11.5.50 and below 12.0:
-
-```text
-"require": {
-  "typo3/cms-core": ">=11.5.50 <12.0",
-  "typo3/cms-backend": ">=11.5.50 <12.0",
-  "typo3/cms-filelist": ">=11.5.50 <12.0"
-}
-```
 
 Development / Contributing
 --------------------------
@@ -59,19 +51,9 @@ Contributions are welcome. Please open an issue or a pull request on the reposit
 - Add tests for new functionality if applicable.
 - Update `CHANGELOG` and `ext_emconf.php` version when creating releases.
 
-Releasing
----------
-- We use semantic versioning starting at `1.0.0`.
-- Create a git tag for a release and push it to the remote repository (e.g. `git tag -a v1.0.0 -m "Release v1.0.0"` and `git push origin v1.0.0`).
-- Packagist will pick up the tag and publish the new version (or configure the GitHub integration in Packagist for automatic updates).
-
 Support
 -------
-If you encounter problems or bugs, please open an issue on the repository. For commercial support contact the authors (see below).
-
-Authors
--------
-- Andreas Hurst <andreas.hurst@itx.de> (ITX)
+If you encounter problems or bugs, please open an issue on the repository.
 
 License
 -------
@@ -84,4 +66,3 @@ See the `Changelog/` directory for release notes and history.
 Notes
 -----
 - The extension installs as a Composer package and will be placed in `vendor/` by Composer. If you require installation into `typo3conf/ext/`, configure installer paths accordingly.
-- Double-check `support` URLs and repository metadata in `composer.json` before publishing to Packagist.
