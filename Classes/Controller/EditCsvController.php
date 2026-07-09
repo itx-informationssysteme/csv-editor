@@ -230,18 +230,11 @@ class EditCsvController
      */
     private function writeCsv(File $file, array $rows, bool $hasBom): void
     {
-        $localPath = $file->getForLocalProcessing(false);
-        $directory = dirname($localPath);
-
-        if (!is_dir($directory) || !is_writable($directory)) {
-            throw new RuntimeException('CSV-Verzeichnis ist nicht beschreibbar.');
+        $tmpPath = GeneralUtility::tempnam('csv_editor_');
+        if ($tmpPath === false) {
+            throw new RuntimeException('Temporaere Datei konnte nicht erstellt werden.');
         }
 
-        if (file_exists($localPath) && !is_writable($localPath)) {
-            throw new RuntimeException('CSV-Datei ist nicht beschreibbar.');
-        }
-
-        $tmpPath = $localPath . '.tmp';
         $handle = fopen($tmpPath, 'wb');
         if ($handle === false) {
             throw new RuntimeException('Temporaere Datei konnte nicht erstellt werden.');
@@ -261,7 +254,9 @@ class EditCsvController
 
         fclose($handle);
 
-        if (!rename($tmpPath, $localPath)) {
+        try {
+            $file->getStorage()->replaceFile($file, $tmpPath);
+        } catch (\Throwable $exception) {
             @unlink($tmpPath);
             throw new RuntimeException('CSV-Datei konnte nicht gespeichert werden.');
         }
