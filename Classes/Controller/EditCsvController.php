@@ -19,15 +19,19 @@ use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Page\PageRenderer;
 
 class EditCsvController
 {
+    protected string $delimiter = ';';
+
     public function __construct(
         private readonly ResourceFactory $resourceFactory,
         private readonly UriBuilder $uriBuilder,
         private readonly ModuleTemplateFactory $moduleTemplateFactory,
         private readonly IconFactory $iconFactory,
-        private readonly CsvEditorTargetResolver $targetResolver
+        private readonly CsvEditorTargetResolver $targetResolver,
+        private readonly PageRenderer $pageRenderer
     ) {}
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
@@ -59,6 +63,11 @@ class EditCsvController
             $moduleTemplate->setTitle($this->trans('title.editor'));
             $moduleTemplate->setContent('<div class="alert alert-danger">Keine Schreibrechte auf diese Datei.</div>');
             return new HtmlResponse($moduleTemplate->renderContent(), 403);
+        }
+
+        $localPath = $file->getForLocalProcessing(false);
+        if (is_file($localPath)) {
+            $this->delimiter = $this->detectDelimiter($localPath);
         }
 
         $message = '';
@@ -172,7 +181,7 @@ class EditCsvController
         }
 
         $rows = [];
-        while (($row = fgetcsv($handle, 0, ';')) !== false) {
+        while (($row = fgetcsv($handle, 0, $this->delimiter)) !== false) {
             $normalizedRow = [];
             foreach ($row as $index => $cell) {
                 $value = (string)($cell ?? '');
@@ -194,6 +203,29 @@ class EditCsvController
             'hasBom' => $hasBom,
         ];
     }
+
+    // Source - https://stackoverflow.com/a/59581170
+    // Posted by Ahmed Bermawy
+    // Retrieved 2026-07-08, License - CC BY-SA 4.0
+
+    /**
+     * @param string $csvFile Path to the CSV file
+     * @return string Delimiter
+     */
+    public function detectDelimiter(string $csvFile): string
+    {
+        $delimiters = [";" => 0, "," => 0, "\t" => 0, "|" => 0];
+
+        $handle = fopen($csvFile, "r");
+        $firstLine = fgets($handle);
+        fclose($handle);
+        foreach ($delimiters as $delimiter => &$count) {
+            $count = count(str_getcsv($firstLine, $delimiter));
+        }
+
+        return array_search(max($delimiters), $delimiters);
+    }
+
 
     /**
      * @param array<int, array<int, string>> $rows
@@ -222,7 +254,7 @@ class EditCsvController
         }
 
         foreach ($rows as $row) {
-            if (fputcsv($handle, $row, ';') === false) {
+            if (fputcsv($handle, $row, $this->delimiter) === false) {
                 fclose($handle);
                 @unlink($tmpPath);
                 throw new RuntimeException('CSV-Datei konnte nicht geschrieben werden.');
@@ -312,6 +344,7 @@ class EditCsvController
             $headerValue = (string)($headerValues[$column] ?? '');
             $headerInputsHtml .= '<input class="csv-editor__input csv-editor__header-value" type="hidden" name="cells[0][' . $column . ']" value="' . $this->escape($headerValue) . '">';
         }
+        $headerInputsHtml = '<div id="csv-editor-header-inputs">' . $headerInputsHtml . '</div>';
         for ($rowIndex = 1; $rowIndex < count($rows); $rowIndex++) {
             $row = $rows[$rowIndex] ?? [];
             $rowsHtml .= '<tr>';
@@ -339,6 +372,14 @@ class EditCsvController
 
         $checkedBom = $hasBom ? ' checked' : '';
 
+        $this->pageRenderer->addJsFooterInlineCode(
+            'csv-editor-script',
+            $this->buildScript($removeRowLabel, $columnLabel),
+            false,
+            false,
+            true
+        );
+
         return '<div class="csv-editor">'
             . $flash
             . '<p><strong>' . $this->escape($fileLabel) . ':</strong> <code>' . $this->escape($combinedIdentifier) . '</code></p>'
@@ -359,19 +400,19 @@ class EditCsvController
             . '<tbody>' . $rowsHtml . '</tbody>'
             . '</table></div>'
             . '</form>'
-            . $this->renderScript($removeRowLabel, $columnLabel)
             . '</div>';
     }
 
-    private function renderScript(string $removeRowLabel, string $columnLabel): string
+    private function buildScript(string $removeRowLabel, string $columnLabel): string
     {
         $removeRowJs = $this->jsString($removeRowLabel);
         $columnJs = $this->jsString($columnLabel);
 
-        return '<script>(function(){'
+        return '(function(){'
             . 'const table=document.getElementById("csv-editor-table");if(!table){return;}'
             . 'const tbody=table.querySelector("tbody");'
             . 'const form=document.getElementById("csv-editor-form");'
+            . 'const headerInputsContainer=document.getElementById("csv-editor-header-inputs");'
             . 'const colInput=document.getElementById("csv-editor-column-count");'
             . 'const addRowBtn=document.getElementById("csv-editor-add-row");'
             . 'const addColBtn=document.getElementById("csv-editor-add-column");'
@@ -387,10 +428,10 @@ class EditCsvController
             . 'const action=document.createElement("td");const remove=document.createElement("button");remove.type="button";remove.className="btn btn-default csv-editor__remove-row";remove.textContent=removeRowLabel;action.appendChild(remove);tr.appendChild(action);tbody.appendChild(tr);wireRemove(tr);reindex();updateLabels();};'
             . 'addColBtn.onclick=function(){const current=parseInt(colInput.value,10);colInput.value=String(current+1);'
             . 'const headRow=table.querySelector("thead tr");const actionHead=headRow.lastElementChild;const th=document.createElement("th");th.scope="col";th.textContent=columnLabel+" "+(current+1);headRow.insertBefore(th,actionHead);'
-            . 'const headerInput=document.createElement("input");headerInput.type="hidden";headerInput.className="csv-editor__input csv-editor__header-value";headerInput.name=`cells[0][${current}]`;headerInput.value="";form.insertBefore(headerInput,form.firstChild);'
+            . 'const headerInput=document.createElement("input");headerInput.type="hidden";headerInput.className="csv-editor__input csv-editor__header-value";headerInput.name=`cells[0][${current}]`;headerInput.value="";headerInputsContainer.appendChild(headerInput);'
             . 'tbody.querySelectorAll("tr").forEach((row,rowIndex)=>{const action=row.lastElementChild;const td=document.createElement("td");const input=document.createElement("input");input.type="text";input.className="form-control csv-editor__input";input.name=`cells[${rowIndex+1}][${current}]`;td.appendChild(input);row.insertBefore(td,action);});reindex();updateColumnHeadings();};'
             . 'form.addEventListener("submit",function(){reindex();});'
-            . 'wireRemove(document);updateLabels();updateColumnHeadings();})();</script>';
+            . 'wireRemove(document);updateLabels();updateColumnHeadings();})();';
     }
 
     private function trans(string $key): string

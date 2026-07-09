@@ -2,12 +2,12 @@
 
 /* @phpstan-ignore-next-line */
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'csv_editor',
+    'title' => 'TYPO3 CSV Editor',
     'version' => '1.0.0',
-    'description' => 'Backend CSV editor for the bwregiobus source file',
+    'description' => 'Backend CSV editor',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.0-11.5.99',
+            'typo3' => '11.5.0-13.4.99',
         ],
     ],
     'autoload' => [
