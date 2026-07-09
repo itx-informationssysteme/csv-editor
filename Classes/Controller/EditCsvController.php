@@ -55,14 +55,14 @@ class EditCsvController
 
         if (!$this->targetResolver->isAllowedFile($file)) {
             $moduleTemplate->setTitle($this->trans('title.editor'));
-            $moduleTemplate->setContent('<div class="alert alert-danger">Diese Datei ist im CSV-Editor nicht freigegeben.</div>');
-            return new HtmlResponse($moduleTemplate->renderContent(), 403);
+            $moduleTemplate->assign('content', '<div class="alert alert-danger">Diese Datei ist im CSV-Editor nicht freigegeben.</div>');
+            return $moduleTemplate->renderResponse('Editor/Index')->withStatus(403);
         }
 
         if (!$file->checkActionPermission('write')) {
             $moduleTemplate->setTitle($this->trans('title.editor'));
-            $moduleTemplate->setContent('<div class="alert alert-danger">Keine Schreibrechte auf diese Datei.</div>');
-            return new HtmlResponse($moduleTemplate->renderContent(), 403);
+            $moduleTemplate->assign('content', '<div class="alert alert-danger">Keine Schreibrechte auf diese Datei.</div>');
+            return $moduleTemplate->renderResponse('Editor/Index')->withStatus(403);
         }
 
         $localPath = $file->getForLocalProcessing(false);
@@ -97,8 +97,8 @@ class EditCsvController
             $csvData = $this->readCsv($file);
         } catch (RuntimeException $exception) {
             $moduleTemplate->setTitle($this->trans('title.editor'));
-            $moduleTemplate->setContent('<div class="alert alert-danger">' . $this->escape($exception->getMessage()) . '</div>');
-            return new HtmlResponse($moduleTemplate->renderContent(), 500);
+            $moduleTemplate->assign('content', '<div class="alert alert-danger">' . $this->escape($exception->getMessage()) . '</div>');
+            return $moduleTemplate->renderResponse('Editor/Index')->withStatus(500);
         }
 
         $formAction = (string)$this->uriBuilder->buildUriFromRoute('csv_editor_edit', [
@@ -108,19 +108,17 @@ class EditCsvController
 
         $this->addButtons($moduleTemplate, $returnUrl);
         $moduleTemplate->setTitle($this->trans('title.editor'));
-        $moduleTemplate->setContent(
-            $this->renderEditor(
-                $csvData['rows'],
-                $csvData['hasBom'],
-                $formAction,
-                $returnUrl,
-                $message,
-                $isError,
-                $file->getCombinedIdentifier()
-            )
-        );
+        $moduleTemplate->assign('content', $this->renderEditor(
+            $csvData['rows'],
+            $csvData['hasBom'],
+            $formAction,
+            $returnUrl,
+            $message,
+            $isError,
+            $file->getCombinedIdentifier()
+        ));
 
-        return new HtmlResponse($moduleTemplate->renderContent());
+        return $moduleTemplate->renderResponse('Editor/Index');
     }
 
     private function addButtons($moduleTemplate, string $returnUrl): void
