@@ -7,19 +7,17 @@ namespace Itx\CsvEditor\Controller;
 use Itx\CsvEditor\Service\CsvEditorTargetResolver;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
-use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Page\PageRenderer;
 
 class EditCsvController
 {
@@ -86,7 +84,7 @@ class EditCsvController
                 try {
                     $this->writeCsv($file, $rows, $hasBom);
                     $message = $this->trans('message.saved');
-                } catch (RuntimeException $exception) {
+                } catch (\RuntimeException $exception) {
                     $message = $exception->getMessage();
                     $isError = true;
                 }
@@ -95,7 +93,7 @@ class EditCsvController
 
         try {
             $csvData = $this->readCsv($file);
-        } catch (RuntimeException $exception) {
+        } catch (\RuntimeException $exception) {
             $moduleTemplate->setTitle($this->trans('title.editor'));
             $moduleTemplate->assign('content', '<div class="alert alert-danger">' . $this->escape($exception->getMessage()) . '</div>');
             return $moduleTemplate->renderResponse('Editor/Index')->withStatus(500);
@@ -164,18 +162,18 @@ class EditCsvController
     {
         $localPath = $file->getForLocalProcessing(false);
         if (!is_file($localPath)) {
-            throw new RuntimeException('CSV-Datei konnte lokal nicht gelesen werden.');
+            throw new \RuntimeException('CSV-Datei konnte lokal nicht gelesen werden.');
         }
 
         $contents = file_get_contents($localPath);
         if ($contents === false) {
-            throw new RuntimeException('CSV-Datei konnte nicht gelesen werden.');
+            throw new \RuntimeException('CSV-Datei konnte nicht gelesen werden.');
         }
 
         $hasBom = str_starts_with($contents, "\xEF\xBB\xBF");
         $handle = fopen($localPath, 'rb');
         if ($handle === false) {
-            throw new RuntimeException('CSV-Datei konnte nicht geoeffnet werden.');
+            throw new \RuntimeException('CSV-Datei konnte nicht geoeffnet werden.');
         }
 
         $rows = [];
@@ -212,9 +210,9 @@ class EditCsvController
      */
     public function detectDelimiter(string $csvFile): string
     {
-        $delimiters = [";" => 0, "," => 0, "\t" => 0, "|" => 0];
+        $delimiters = [';' => 0, ',' => 0, "\t" => 0, '|' => 0];
 
-        $handle = fopen($csvFile, "r");
+        $handle = fopen($csvFile, 'r');
         $firstLine = fgets($handle);
         fclose($handle);
         foreach ($delimiters as $delimiter => &$count) {
@@ -224,7 +222,6 @@ class EditCsvController
         return array_search(max($delimiters), $delimiters);
     }
 
-
     /**
      * @param array<int, array<int, string>> $rows
      */
@@ -232,12 +229,12 @@ class EditCsvController
     {
         $tmpPath = GeneralUtility::tempnam('csv_editor_');
         if ($tmpPath === false) {
-            throw new RuntimeException('Temporaere Datei konnte nicht erstellt werden.');
+            throw new \RuntimeException('Temporaere Datei konnte nicht erstellt werden.');
         }
 
         $handle = fopen($tmpPath, 'wb');
         if ($handle === false) {
-            throw new RuntimeException('Temporaere Datei konnte nicht erstellt werden.');
+            throw new \RuntimeException('Temporaere Datei konnte nicht erstellt werden.');
         }
 
         if ($hasBom) {
@@ -248,7 +245,7 @@ class EditCsvController
             if (fputcsv($handle, $row, $this->delimiter) === false) {
                 fclose($handle);
                 @unlink($tmpPath);
-                throw new RuntimeException('CSV-Datei konnte nicht geschrieben werden.');
+                throw new \RuntimeException('CSV-Datei konnte nicht geschrieben werden.');
             }
         }
 
@@ -258,7 +255,7 @@ class EditCsvController
             $file->getStorage()->replaceFile($file, $tmpPath);
         } catch (\Throwable $exception) {
             @unlink($tmpPath);
-            throw new RuntimeException('CSV-Datei konnte nicht gespeichert werden.');
+            throw new \RuntimeException('CSV-Datei konnte nicht gespeichert werden.');
         }
     }
 

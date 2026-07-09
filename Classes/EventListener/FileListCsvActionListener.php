@@ -39,8 +39,11 @@ class FileListCsvActionListener
             return;
         }
 
+        $parentFolder = $resource->getParentFolder();
+        $parentFolderIdentifier = $parentFolder->getStorage()->getUid() . ':' . $parentFolder->getIdentifier();
+
         $returnUrl = (string)$this->uriBuilder->buildUriFromRoute('file_FilelistList', [
-            'id' => $resource->getParentFolder()->getCombinedIdentifier(),
+            'id' => $parentFolderIdentifier,
         ]);
         $editUrl = (string)$this->uriBuilder->buildUriFromRoute('csv_editor_edit', [
             'target' => $resource->getCombinedIdentifier(),

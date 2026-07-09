@@ -10,4 +10,3 @@ if (!in_array('csv', $textExtParts, true)) {
     $textExtParts[] = 'csv';
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['textfile_ext'] = implode(',', $textExtParts);
 }
-
