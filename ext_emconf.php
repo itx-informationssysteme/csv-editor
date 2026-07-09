@@ -3,7 +3,7 @@
 /* @phpstan-ignore-next-line */
 $EM_CONF[$_EXTKEY] = [
     'title' => 'TYPO3 CSV Editor',
-    'version' => '2.0.0',
+    'version' => '3.0.0',
     'description' => 'Backend CSV editor',
     'constraints' => [
         'depends' => [
