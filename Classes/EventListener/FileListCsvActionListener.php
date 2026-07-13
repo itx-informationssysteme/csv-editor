@@ -6,10 +6,8 @@ namespace Itx\CsvEditor\EventListener;
 
 use Itx\CsvEditor\Service\CsvEditorTargetResolver;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\Components\ActionGroup;
-use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Filelist\Event\ProcessFileListActionsEvent;
@@ -41,11 +39,8 @@ class FileListCsvActionListener
             return;
         }
 
-        $parentFolder = $resource->getParentFolder();
-        $parentFolderIdentifier = $parentFolder->getStorage()->getUid() . ':' . $parentFolder->getIdentifier();
-
         $returnUrl = (string)$this->uriBuilder->buildUriFromRoute('file_FilelistList', [
-            'id' => $parentFolderIdentifier,
+            'id' => $resource->getParentFolder()->getCombinedIdentifier(),
         ]);
         $editUrl = (string)$this->uriBuilder->buildUriFromRoute('csv_editor_edit', [
             'target' => $resource->getCombinedIdentifier(),
@@ -53,12 +48,11 @@ class FileListCsvActionListener
         ]);
 
         $actionItems = $event->getActionItems();
-
         $actionItems['csv_edit'] = sprintf(
             '<a class="btn btn-default" href="%s" title="%s">%s</a>',
             htmlspecialchars($editUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
             htmlspecialchars($this->trans('tooltip.editAsTable'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            $this->iconFactory->getIcon('actions-page-open', IconSize::SIZE_SMALL)->render()
+            $this->iconFactory->getIcon('actions-page-open', Icon::SIZE_SMALL)->render()
         );
 
         $event->setActionItems($actionItems);
