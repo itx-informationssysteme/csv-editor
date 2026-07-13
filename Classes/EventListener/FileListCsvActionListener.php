@@ -19,7 +19,6 @@ class FileListCsvActionListener
     public function __construct(
         private readonly UriBuilder $uriBuilder,
         private readonly IconFactory $iconFactory,
-        private readonly ComponentFactory $componentFactory,
         private readonly CsvEditorTargetResolver $targetResolver
     ) {}
 
@@ -53,12 +52,16 @@ class FileListCsvActionListener
             'returnUrl' => $returnUrl,
         ]);
 
-        $editButton = $this->componentFactory->createLinkButton()
-            ->setHref($editUrl)
-            ->setTitle($this->trans('tooltip.editAsTable'))
-            ->setIcon($this->iconFactory->getIcon('actions-page-open', IconSize::SMALL));
+        $actionItems = $event->getActionItems();
 
-        $event->setAction($editButton, 'edit-csv', ActionGroup::primary);
+        $actionItems['csv_edit'] = sprintf(
+            '<a class="btn btn-default" href="%s" title="%s">%s</a>',
+            htmlspecialchars($editUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            htmlspecialchars($this->trans('tooltip.editAsTable'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            $this->iconFactory->getIcon('actions-page-open', Icon::SIZE_SMALL)->render()
+        );
+
+        $event->setActionItems($actionItems);
     }
 
     private function trans(string $key): string
