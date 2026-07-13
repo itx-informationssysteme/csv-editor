@@ -58,7 +58,7 @@ class FileListCsvActionListener
             '<a class="btn btn-default" href="%s" title="%s">%s</a>',
             htmlspecialchars($editUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
             htmlspecialchars($this->trans('tooltip.editAsTable'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            $this->iconFactory->getIcon('actions-page-open', Icon::SIZE_SMALL)->render()
+            $this->iconFactory->getIcon('actions-page-open', IconSize::SIZE_SMALL)->render()
         );
 
         $event->setActionItems($actionItems);

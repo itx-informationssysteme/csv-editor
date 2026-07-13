@@ -3,12 +3,14 @@
 Changelog
 =========
 
-3.0.1
+1.0.1
 -----
 
 - Fix: Do not overwrite the TYPO3 default "Edit" action in the file list. The CSV editor now
   adds a separate action item under the key `csv_edit`, so the original Edit button (which
   allows replacing the whole file) remains available.
+  
+- Add Typo3 Versions
 
 
 1.0.0
