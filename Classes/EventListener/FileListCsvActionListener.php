@@ -6,10 +6,8 @@ namespace Itx\CsvEditor\EventListener;
 
 use Itx\CsvEditor\Service\CsvEditorTargetResolver;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
-use TYPO3\CMS\Backend\Template\Components\ActionGroup;
-use TYPO3\CMS\Backend\Template\Components\ComponentFactory;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Filelist\Event\ProcessFileListActionsEvent;
@@ -19,7 +17,6 @@ class FileListCsvActionListener
     public function __construct(
         private readonly UriBuilder $uriBuilder,
         private readonly IconFactory $iconFactory,
-        private readonly ComponentFactory $componentFactory,
         private readonly CsvEditorTargetResolver $targetResolver
     ) {}
 
@@ -53,12 +50,16 @@ class FileListCsvActionListener
             'returnUrl' => $returnUrl,
         ]);
 
-        $editButton = $this->componentFactory->createLinkButton()
-            ->setHref($editUrl)
-            ->setTitle($this->trans('tooltip.editAsTable'))
-            ->setIcon($this->iconFactory->getIcon('actions-page-open', IconSize::SMALL));
+        $actionItems = $event->getActionItems();
+        
+        $actionItems['csv_edit'] = sprintf(
+            '<a class="btn btn-default" href="%s" title="%s">%s</a>',
+            htmlspecialchars($editUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            htmlspecialchars($this->trans('tooltip.editAsTable'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            $this->iconFactory->getIcon('actions-page-open', Icon::SIZE_SMALL)->render()
+        );
 
-        $event->setAction($editButton, 'edit-csv', ActionGroup::primary);
+        $event->setActionItems($actionItems);
     }
 
     private function trans(string $key): string
