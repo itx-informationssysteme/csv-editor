@@ -12,7 +12,7 @@ use TYPO3\CMS\Backend\Template\Components\ButtonBar;
 use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Imaging\IconFactory;
-use TYPO3\CMS\Core\Imaging\IconSize;
+use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Resource\File;
@@ -129,14 +129,14 @@ class EditCsvController
             ->setForm('csv-editor-form')
             ->setShowLabelText(true)
             ->setTitle($this->trans('button.save'))
-            ->setIcon($this->iconFactory->getIcon('actions-document-save', IconSize::SMALL));
+            ->setIcon($this->iconFactory->getIcon('actions-document-save', Icon::SIZE_SMALL));
         $buttonBar->addButton($saveButton, ButtonBar::BUTTON_POSITION_LEFT, 20);
 
         $cancelButton = $buttonBar->makeLinkButton()
             ->setShowLabelText(true)
             ->setHref($returnUrl)
             ->setTitle($this->trans('button.back'))
-            ->setIcon($this->iconFactory->getIcon('actions-close', IconSize::SMALL));
+            ->setIcon($this->iconFactory->getIcon('actions-close', Icon::SIZE_SMALL));
         $buttonBar->addButton($cancelButton, ButtonBar::BUTTON_POSITION_LEFT, 10);
     }
 
