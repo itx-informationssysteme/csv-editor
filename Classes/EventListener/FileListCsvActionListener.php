@@ -48,7 +48,7 @@ class FileListCsvActionListener
         ]);
 
         $actionItems = $event->getActionItems();
-        $actionItems['csv_edit'] = sprintf(
+        $actionItems['edit'] = sprintf(
             '<a class="btn btn-default" href="%s" title="%s">%s</a>',
             htmlspecialchars($editUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
             htmlspecialchars($this->trans('tooltip.editAsTable'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
