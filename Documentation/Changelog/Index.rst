@@ -3,6 +3,11 @@
 Changelog
 =========
 
+1.0.2
+-----
+
+- Fix: Add Typo3 versions compatibility to composer.json file.
+
 1.0.1
 -----
 
