@@ -17,9 +17,9 @@
 		"docs": "https://docs.typo3.org/p/itx/jobapplications/main/en-us/"
 	},
 	"require": {
-		"typo3/cms-core": "^11 || ^12 || ^13 || ^14",
-		"typo3/cms-backend": "^11 || ^12 || ^13 || ^14",
-		"typo3/cms-filelist": "^11 || ^12 || ^13 || ^14"
+		"typo3/cms-core": "^11",
+		"typo3/cms-backend": "^11",
+		"typo3/cms-filelist": "^11"
 	},
 	"autoload": {
 		"psr-4": {
