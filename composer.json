@@ -3,7 +3,7 @@
 	"description": "TYPO3 backend CSV editor for filelist integration",
 	"type": "typo3-cms-extension",
 	"license": "GPL-3.0-or-later",
-	"homepage": "http://www.itx.de",
+	"homepage": "https://www.itx.de",
 	"authors": [
 		{
 			"name": "itx informationssysteme gmbh",
@@ -13,8 +13,7 @@
 	],
 	"support": {
 		"email": "support@itx.de",
-		"issues": "https://github.com/typo3-itx/jobapplications/issues",
-		"docs": "https://docs.typo3.org/p/itx/jobapplications/main/en-us/"
+		"issues": "https://github.com/itx-informationssysteme/csv-editor/issues"
 	},
 	"require": {
 		"typo3/cms-core": "^14.3",

@@ -6,7 +6,7 @@ use Itx\CsvEditor\Controller\EditCsvController;
 
 return [
     'csv_editor_edit' => [
-        'path' => '/typo3/csv/edit',
+        'path' => '/csv-editor/edit',
         'target' => EditCsvController::class . '::handleRequest',
     ],
 ];
