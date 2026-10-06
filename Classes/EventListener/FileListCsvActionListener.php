@@ -45,7 +45,7 @@ class FileListCsvActionListener
         $parentFolder = $resource->getParentFolder();
         $parentFolderIdentifier = $parentFolder->getStorage()->getUid() . ':' . $parentFolder->getIdentifier();
 
-        $returnUrl = (string)$this->uriBuilder->buildUriFromRoute('file_FilelistList', [
+        $returnUrl = (string)$this->uriBuilder->buildUriFromRoute('media_management', [
             'id' => $parentFolderIdentifier,
         ]);
         $editUrl = (string)$this->uriBuilder->buildUriFromRoute('csv_editor_edit', [

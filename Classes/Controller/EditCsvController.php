@@ -41,9 +41,9 @@ class EditCsvController
         $target = (string)($parsedBody['target'] ?? $queryParams['target'] ?? '');
 
         $returnUrl = (string)($parsedBody['returnUrl'] ?? $queryParams['returnUrl'] ?? '');
-        $returnUrl = GeneralUtility::sanitizeLocalUrl($returnUrl);
+        $returnUrl = GeneralUtility::sanitizeLocalUrl($returnUrl, $request);
         if ($returnUrl === '') {
-            $returnUrl = (string)$this->uriBuilder->buildUriFromRoute('file_FilelistList');
+            $returnUrl = (string)$this->uriBuilder->buildUriFromRoute('media_management');
         }
 
         $file = $this->resolveFile($target);
