@@ -7,7 +7,7 @@ $EM_CONF[$_EXTKEY] = [
     'description' => 'Backend CSV editor',
     'constraints' => [
         'depends' => [
-            'typo3' => '12.4.0-13.4.99',
+            'typo3' => '12.4.0-13.9.99',
         ],
     ],
     'autoload' => [
