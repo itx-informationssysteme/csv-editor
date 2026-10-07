@@ -177,7 +177,7 @@ class EditCsvController
         }
 
         $rows = [];
-        while (($row = fgetcsv($handle, 0, $this->delimiter)) !== false) {
+        while (($row = fgetcsv($handle, 0, $this->delimiter, '"', '\\')) !== false) {
             $normalizedRow = [];
             foreach ($row as $index => $cell) {
                 $value = (string)($cell ?? '');
@@ -216,7 +216,7 @@ class EditCsvController
         $firstLine = fgets($handle);
         fclose($handle);
         foreach ($delimiters as $delimiter => &$count) {
-            $count = count(str_getcsv($firstLine, $delimiter));
+            $count = count(str_getcsv($firstLine, $delimiter, '"', '\\'));
         }
 
         return array_search(max($delimiters), $delimiters);
